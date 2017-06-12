@@ -12,5 +12,5 @@ public class SportclustersApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-
+	
 }

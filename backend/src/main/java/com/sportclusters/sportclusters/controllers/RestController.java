@@ -13,7 +13,6 @@ import com.sportclusters.sportclusters.repositories.UsersDao;
 
 @org.springframework.web.bind.annotation.RestController
 
-@Transactional
 public class RestController {
 
 	@Autowired
@@ -23,7 +22,7 @@ public class RestController {
 	@RequestMapping(value = "adduser", method = RequestMethod.POST)
 	public void add(@RequestBody User user){
 		userDb.create(user);
-		System.out.println(userDb.getUserByName(user.getFirstName()).getId());
+//		System.out.println(userDb.getUserByName(user.getFirstName()).getId());
 	}
 	
 }

@@ -29,6 +29,10 @@ public class User {
 	@Column(name = "lastName")
 	private String lastName;
 	
+	@Column(name = "password")
+	private String passw;
+	
+	
 	public UUID getId() {
 		return id;
 	}

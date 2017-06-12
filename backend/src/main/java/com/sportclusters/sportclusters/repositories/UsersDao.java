@@ -4,13 +4,16 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
 import com.sportclusters.sportclusters.entity.User;
 
+@Transactional
 @Repository
 public class UsersDao {
+	
 	@PersistenceContext
 	private EntityManager entityManager;
 
