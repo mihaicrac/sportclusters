@@ -15,13 +15,13 @@ import com.sportclusters.sportclusters.repositories.UsersDao;
 
 public class RestController {
 
-	@Autowired
+//	@Autowired
 	UsersDao userDb;
 
 	
 	@RequestMapping(value = "adduser", method = RequestMethod.POST)
 	public void add(@RequestBody User user){
-		userDb.create(user);
+//		userDb.create(user);
 //		System.out.println(userDb.getUserByName(user.getFirstName()).getId());
 	}
 	

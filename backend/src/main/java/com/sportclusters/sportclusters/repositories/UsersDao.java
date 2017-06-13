@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import com.sportclusters.sportclusters.entity.User;
 
-@Transactional
-@Repository
+//@Transactional
+//@Repository
 public class UsersDao {
 	
 	@PersistenceContext

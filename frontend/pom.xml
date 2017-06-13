@@ -30,7 +30,7 @@
                 <version>1.4</version>
 
                 <configuration>
-                    <nodeVersion>v7.10.0</nodeVersion>o
+                    <nodeVersion>v7.10.0</nodeVersion>
                     <npmVersion>4.6.1</npmVersion>
                     <workingDirectory>src/main/frontend</workingDirectory>
                 </configuration>
