@@ -14,6 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -97,11 +98,15 @@ public class AuthenticationRestController {
     @RequestMapping(value = "/doregister", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody JwtRegisterRequest regReq, Device device){
     	
+    	BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
+    	
     	User u = new User();
-    	u.setFirstname(regReq.getFirstName());
-    	u.setLastname(regReq.getLastName());
-    	u.setEmail(regReq.getEmail());
-    	u.setPassword(regReq.getPassword());
+    	u.setFirstname(regReq.getFirstname());
+    	u.setLastname(regReq.getLastname());
+//    	u.setEmail(regReq.getEmail());
+    	u.setEmail("gingirel@cacat.ro");
+    	u.setPassword(encrypt.encode(regReq.getPassword()));
+    	u.setUsername(regReq.getUsername());
     	
     	Authority a = authRepo.findByName(AuthorityName.ROLE_USER);
     	List<Authority> l = new ArrayList<Authority>();
@@ -111,7 +116,6 @@ public class AuthenticationRestController {
     	u.setEnabled(true);
     	u.setLastPasswordResetDate(new Date());
     	userRepo.save(u);
-    	
     	
     	final UserDetails userDetails = userDetailsService.loadUserByUsername(u.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails, device);

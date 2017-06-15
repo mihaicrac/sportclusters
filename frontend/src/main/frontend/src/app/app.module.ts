@@ -12,7 +12,7 @@ import { LoginComponent } from './login/index';
 import { RegisterComponent } from './register/index';
 
 
-import { AuthenticationService } from './_services/index';
+import { AuthenticationService, RegisterService } from './_services/index';
 
 
 
@@ -30,7 +30,7 @@ import { AuthenticationService } from './_services/index';
     HomeComponent,
     RegisterComponent
   ],
-  providers: [ AuthenticationService ],
+  providers: [ AuthenticationService, RegisterService],
   bootstrap: [ AppComponent ]
 })
 export class AppModule {
