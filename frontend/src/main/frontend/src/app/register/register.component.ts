@@ -17,7 +17,7 @@ export class RegisterComponent {
 
     register() {
       this.loading = true;
-      this.registerService.register(this.model.username, this.model.password, this.model.firstname, this.model.lastname)
+      this.registerService.register(this.model.username, this.model.password, this.model.firstname, this.model.lastname, this.model.email)
           .subscribe(result => {
               if (result === true) {
                   // Register successful

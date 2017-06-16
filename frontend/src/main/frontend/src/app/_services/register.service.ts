@@ -13,8 +13,8 @@ export class RegisterService {
     constructor(private http: Http) {
     }
 
-    register(username: string, password: string, firstname: string, lastname: string): Observable<boolean> {
-        return this.http.post(this.registerUrl, JSON.stringify({username: username, password: password, firstname: firstname, lastname: lastname}), {headers: this.headers})
+    register(username: string, password: string, firstname: string, lastname: string, email: string): Observable<boolean> {
+        return this.http.post(this.registerUrl, JSON.stringify({username: username, password: password, firstname: firstname, lastname: lastname, email: email}), {headers: this.headers})
             .map((response: Response) => {
                 // login successful if there's a jwt token in the response
                 let token = response.json() && response.json().token;

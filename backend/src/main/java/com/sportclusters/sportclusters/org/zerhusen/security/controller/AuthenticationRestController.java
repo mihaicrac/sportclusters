@@ -103,8 +103,7 @@ public class AuthenticationRestController {
     	User u = new User();
     	u.setFirstname(regReq.getFirstname());
     	u.setLastname(regReq.getLastname());
-//    	u.setEmail(regReq.getEmail());
-    	u.setEmail("gingirel@cacat.ro");
+    	u.setEmail(regReq.getEmail());
     	u.setPassword(encrypt.encode(regReq.getPassword()));
     	u.setUsername(regReq.getUsername());
     	
