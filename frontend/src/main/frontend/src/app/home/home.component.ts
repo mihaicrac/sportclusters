@@ -1,9 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injectable } from '@angular/core';
+import { Http } from '@angular/http';
 
 @Component({
-    moduleId: module.id,
-    templateUrl: 'home.component.html'
+  moduleId: module.id,
+  templateUrl: 'home.component.html'
 })
 
-export class HomeComponent{
+@Injectable()
+export class HomeComponent implements OnInit{
+  model: any = {};
+
+
+  constructor(private http: Http) {
+  }
+  ngOnInit(): void {
+    // TODO Auto-generated method stub
+    
+    return;
+  }
 }

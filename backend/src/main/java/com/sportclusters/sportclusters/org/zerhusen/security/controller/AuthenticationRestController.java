@@ -3,6 +3,8 @@ package com.sportclusters.sportclusters.org.zerhusen.security.controller;
 
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +27,7 @@ import com.sportclusters.sportclusters.org.zerhusen.model.security.Authority;
 import com.sportclusters.sportclusters.org.zerhusen.model.security.AuthorityName;
 import com.sportclusters.sportclusters.org.zerhusen.model.security.User;
 import com.sportclusters.sportclusters.org.zerhusen.security.JwtAuthenticationRequest;
+import com.sportclusters.sportclusters.org.zerhusen.security.JwtAuthenticationTokenFilter;
 import com.sportclusters.sportclusters.org.zerhusen.security.JwtRegisterRequest;
 import com.sportclusters.sportclusters.org.zerhusen.security.JwtTokenUtil;
 import com.sportclusters.sportclusters.org.zerhusen.security.JwtUser;
@@ -59,9 +63,11 @@ public class AuthenticationRestController {
     @Autowired
     private UserRepository userRepo;
     
+    @Autowired
+    private JwtAuthenticationTokenFilter authService;
     
 
-    @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
 
         // Perform the security
@@ -81,7 +87,7 @@ public class AuthenticationRestController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
 
-    @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/${jwt.route.authentication.refresh}", method = RequestMethod.GET)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(token);
@@ -95,7 +101,7 @@ public class AuthenticationRestController {
         }
     }
     
-    @RequestMapping(value = "/doregister", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/doregister", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody JwtRegisterRequest regReq, Device device){
     	
     	BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
@@ -122,4 +128,37 @@ public class AuthenticationRestController {
         // Return the token
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
+    
+   
+    
+    @RequestMapping(value = "/api/home", method = RequestMethod.POST)
+    public String register(@RequestHeader(value="Authorization") String authorization){
+    	
+    	if(authorization != null && authorization.startsWith("Bearer ")) {
+            authorization = authorization.substring(7);
+        }
+    	
+    	
+    	String username = jwtTokenUtil.getUsernameFromToken(authorization);
+    	User u = userRepo.findByUsername(username);
+    	
+    	JSONObject obj = new JSONObject();
+    	try {
+			obj.put("username", u.getUsername());
+			obj.put("firstname", u.getFirstname());
+			obj.put("lastname", u.getLastname());
+			obj.put("email", u.getEmail());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return obj.toString();
+    }
+    
+    
+    
+    
+    
+    
 }

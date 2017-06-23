@@ -16,7 +16,7 @@
             <button [disabled]="loading" class="btn btn-primary">Login</button>
             </div>
         <div *ngIf="error" class="alert alert-error">{{error}}</div>
-        <button [disabled]="loading" [routerLink]="['/register']" class="btn btn-primary">Register</button>
+        <button class="form-group" [disabled]="loading" [routerLink]="['/register']" class="btn btn-primary">Register</button>
     </form>
     </div></div>
 </div>
