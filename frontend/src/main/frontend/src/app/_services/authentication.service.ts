@@ -31,10 +31,10 @@ export class AuthenticationService {
       }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
-  getToken(): String {
-    var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    var token = currentUser && currentUser.token;
-    return token ? token : "";
+  getToken(): string {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    return token ? token : '';
   }
 
   logout(): void {
