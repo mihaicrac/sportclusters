@@ -1,26 +1,37 @@
-import { User } from '../_models/user';
-import { AuthenticationService } from './authentication.service';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { Observable } from 'rxjs';
+import { Http, Response, RequestOptions } from '@angular/http';
+
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+
+
+export enum Method {
+  POST,
+  GET
+};
+
 
 @Injectable()
 export class ServerClientService {
 
-//  public getObservable(url: string, headers: string): Observable<User> {
-//    return this.http.get(url, headers).map((response: Response) => {
-// 
-//      return response.json();
-//      
-//    }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-//  }
+  constructor(private http: Http) { }
 
 
-  constructor(private http: Http, private authenticationService: AuthenticationService) {
+  public getObservable<T>(typeH: Method, url: string, options: RequestOptions, payload?: string): Observable<T> {
+
+    let resp = new Observable<Response>();
+
+    if (typeH === Method.GET) {
+      resp = this.http.get(url, options);
+    } else {
+      resp = this.http.post(url, payload, options);
+    }
+
+    return resp.map((response: Response) => {
+      return response.json();
+    }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
 
   }
-
-
-
 
 }

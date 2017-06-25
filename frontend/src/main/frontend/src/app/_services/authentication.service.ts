@@ -7,7 +7,7 @@ import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class AuthenticationService {
-  private authUrl = '/api/auth';
+  private authUrl = 'http://localhost:8080/api/auth';
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(private http: Http) {
@@ -31,10 +31,10 @@ export class AuthenticationService {
       }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
-  getToken(): String {
-    var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    var token = currentUser && currentUser.token;
-    return token ? token : "";
+  getToken(): string {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = currentUser && currentUser.token;
+    return token ? token : '';
   }
 
   logout(): void {

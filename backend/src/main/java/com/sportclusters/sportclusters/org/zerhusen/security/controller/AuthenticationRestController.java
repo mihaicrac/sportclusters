@@ -131,15 +131,18 @@ public class AuthenticationRestController {
     
    
     
-    @RequestMapping(value = "/api/home", method = RequestMethod.POST)
-    public String register(@RequestHeader(value="Authorization") String authorization){
+    @RequestMapping(value = "/api/home", method = RequestMethod.GET)
+    public String register(HttpServletRequest request){
     	
-    	if(authorization != null && authorization.startsWith("Bearer ")) {
-            authorization = authorization.substring(7);
+    	String authToken = request.getHeader(this.tokenHeader);
+        // authToken.startsWith("Bearer ")
+        // String authToken = header.substring(7);
+
+        if(authToken != null && authToken.startsWith("Bearer ")) {
+            authToken = authToken.substring(7);
         }
     	
-    	
-    	String username = jwtTokenUtil.getUsernameFromToken(authorization);
+    	String username = jwtTokenUtil.getUsernameFromToken(authToken);
     	User u = userRepo.findByUsername(username);
     	
     	JSONObject obj = new JSONObject();
@@ -155,10 +158,5 @@ public class AuthenticationRestController {
     	
     	return obj.toString();
     }
-    
-    
-    
-    
-    
-    
+     
 }
