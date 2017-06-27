@@ -13,6 +13,7 @@ import { RegisterComponent } from './register/index';
 
 
 import { AuthenticationService, RegisterService } from './_services/index';
+import { MyFormsModule } from './myForms.module';
 
 
 
@@ -22,7 +23,8 @@ import { AuthenticationService, RegisterService } from './_services/index';
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MyFormsModule
   ],
   declarations: [
     AppComponent,
