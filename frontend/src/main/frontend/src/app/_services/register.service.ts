@@ -7,7 +7,7 @@ import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class RegisterService {
-    private registerUrl = 'http://localhost:8080/api/doregister';
+    private registerUrl = '/api/doregister';
     private headers = new Headers({'Content-Type': 'application/json'});
 
     constructor(private http: Http) {

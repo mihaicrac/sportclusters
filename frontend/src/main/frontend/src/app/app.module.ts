@@ -31,7 +31,7 @@ import { MyFormsModule } from './myForms.module';
     HomeComponent,
     LoginComponent,
     HomeComponent,
-    RegisterComponent
+    RegisterComponent,
   ],
   providers: [ AuthenticationService, RegisterService],
   bootstrap: [ AppComponent ]

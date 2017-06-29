@@ -7,7 +7,7 @@ import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class AuthenticationService {
-  private authUrl = 'http://localhost:8080/api/auth';
+  private authUrl = '/api/auth';
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(private http: Http) {
