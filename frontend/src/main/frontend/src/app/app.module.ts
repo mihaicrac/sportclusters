@@ -10,9 +10,9 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/index';
 import { LoginComponent } from './login/index';
 import { RegisterComponent } from './register/index';
-
-
 import { AuthenticationService, RegisterService } from './_services/index';
+import { DetailsComponent } from './home/details.component';
+import { HomeModule } from './home/home.module';
 import { MyFormsModule } from './myForms.module';
 
 
@@ -24,14 +24,13 @@ import { MyFormsModule } from './myForms.module';
     ReactiveFormsModule,
     HttpModule,
     AppRoutingModule,
-    MyFormsModule
+    MyFormsModule,
+    HomeModule
   ],
   declarations: [
     AppComponent,
-    HomeComponent,
     LoginComponent,
-    HomeComponent,
-    RegisterComponent,
+    RegisterComponent
   ],
   providers: [ AuthenticationService, RegisterService],
   bootstrap: [ AppComponent ]

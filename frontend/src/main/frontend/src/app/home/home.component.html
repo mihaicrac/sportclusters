@@ -1,4 +1,25 @@
-<div class="col-md-6 col-md-offset-3">
+
 	<h1>Hi {{model.username}} !</h1>
-	<dynamic-form [questions]="questions"></dynamic-form>
-</div>
+	<div class="row">
+		<div class="col-sm-3 sidenav" style="background-color:crimson;">
+      		<ul class="nav nav-pills nav-stacked">
+        		<li class="active">
+					<a routerLink="details" routerLinkActive="active">Account details</a>
+				</li>
+        		<li>
+					<a href="#section2">Friends</a>
+				</li>
+        		<li>
+					<a href="#section3">Family</a>
+				</li>
+        		<li>
+					<a href="#section3">Photos</a>
+				</li>
+      		</ul><br>
+		</div>	  
+<!--	<dynamic-form [questions]="questions"></dynamic-form>  -->
+		<div class="col-sm-9" style="background-color:blue;">
+			<router-outlet></router-outlet>	
+		</div>	
+	</div>
+	
