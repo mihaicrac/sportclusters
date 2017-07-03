@@ -1,4 +1,4 @@
-package com.sportclusters.sportclusters.org.zerhusen.security;
+package com.sportclusters.sportclusters.security;
 
 public class JwtRegisterRequest {
 	String firstname;

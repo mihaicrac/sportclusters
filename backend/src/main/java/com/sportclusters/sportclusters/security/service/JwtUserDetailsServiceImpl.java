@@ -1,4 +1,4 @@
-package com.sportclusters.sportclusters.org.zerhusen.security.service;
+package com.sportclusters.sportclusters.security.service;
 
 
 
@@ -9,9 +9,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.sportclusters.sportclusters.org.zerhusen.model.security.User;
-import com.sportclusters.sportclusters.org.zerhusen.security.JwtUserFactory;
-import com.sportclusters.sportclusters.org.zerhusen.security.repository.UserRepository;
+import com.sportclusters.sportclusters.security.JwtUserFactory;
+import com.sportclusters.sportclusters.security.model.User;
+import com.sportclusters.sportclusters.security.repository.UserRepository;
 
 /**
  * Created by stephan on 20.03.16.

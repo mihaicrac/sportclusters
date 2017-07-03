@@ -1,4 +1,4 @@
-package com.sportclusters.sportclusters.org.zerhusen.security;
+package com.sportclusters.sportclusters.security;
 
 
 
@@ -6,8 +6,8 @@ package com.sportclusters.sportclusters.org.zerhusen.security;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.sportclusters.sportclusters.org.zerhusen.model.security.Authority;
-import com.sportclusters.sportclusters.org.zerhusen.model.security.User;
+import com.sportclusters.sportclusters.security.model.Authority;
+import com.sportclusters.sportclusters.security.model.User;
 
 import java.util.List;
 import java.util.stream.Collectors;

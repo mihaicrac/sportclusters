@@ -13,6 +13,22 @@ const homeRoutes: Routes = [
         path: 'details',
         component: DetailsComponent
       },
+       {
+        path: 'userList',
+        component: DetailsComponent
+      },
+       {
+        path: 'eventList',
+        component: DetailsComponent
+      },
+      {
+        path: 'searchEvent',
+        component: DetailsComponent
+      },
+      {
+        path: 'createEvent',
+        component: DetailsComponent
+      },
     ]
   }
 ];

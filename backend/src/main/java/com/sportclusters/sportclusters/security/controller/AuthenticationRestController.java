@@ -1,4 +1,4 @@
-package com.sportclusters.sportclusters.org.zerhusen.security.controller;
+package com.sportclusters.sportclusters.security.controller;
 
 
 
@@ -22,17 +22,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sportclusters.sportclusters.org.zerhusen.model.security.Authority;
-import com.sportclusters.sportclusters.org.zerhusen.model.security.AuthorityName;
-import com.sportclusters.sportclusters.org.zerhusen.model.security.User;
-import com.sportclusters.sportclusters.org.zerhusen.security.JwtAuthenticationRequest;
-import com.sportclusters.sportclusters.org.zerhusen.security.JwtAuthenticationTokenFilter;
-import com.sportclusters.sportclusters.org.zerhusen.security.JwtRegisterRequest;
-import com.sportclusters.sportclusters.org.zerhusen.security.JwtTokenUtil;
-import com.sportclusters.sportclusters.org.zerhusen.security.JwtUser;
-import com.sportclusters.sportclusters.org.zerhusen.security.repository.AuthorityRepository;
-import com.sportclusters.sportclusters.org.zerhusen.security.repository.UserRepository;
-import com.sportclusters.sportclusters.org.zerhusen.security.service.JwtAuthenticationResponse;
+import com.sportclusters.sportclusters.security.JwtAuthenticationRequest;
+import com.sportclusters.sportclusters.security.JwtRegisterRequest;
+import com.sportclusters.sportclusters.security.JwtTokenUtil;
+import com.sportclusters.sportclusters.security.JwtUser;
+import com.sportclusters.sportclusters.security.model.Authority;
+import com.sportclusters.sportclusters.security.model.AuthorityName;
+import com.sportclusters.sportclusters.security.model.User;
+import com.sportclusters.sportclusters.security.repository.AuthorityRepository;
+import com.sportclusters.sportclusters.security.repository.UserRepository;
+import com.sportclusters.sportclusters.security.service.JwtAuthenticationResponse;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,10 +60,7 @@ public class AuthenticationRestController {
     
     @Autowired
     private UserRepository userRepo;
-    
-    @Autowired
-    private JwtAuthenticationTokenFilter authService;
-    
+
 
     @RequestMapping(value = "/api/${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
@@ -127,35 +123,6 @@ public class AuthenticationRestController {
         // Return the token
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
-    
-   
-    
-    @RequestMapping(value = "/api/home", method = RequestMethod.GET)
-    public String register(HttpServletRequest request){
-    	
-    	String authToken = request.getHeader(this.tokenHeader);
-        // authToken.startsWith("Bearer ")
-        // String authToken = header.substring(7);
 
-        if(authToken != null && authToken.startsWith("Bearer ")) {
-            authToken = authToken.substring(7);
-        }
-    	
-    	String username = jwtTokenUtil.getUsernameFromToken(authToken);
-    	User u = userRepo.findByUsername(username);
-    	
-    	JSONObject obj = new JSONObject();
-    	try {
-			obj.put("username", u.getUsername());
-			obj.put("firstname", u.getFirstname());
-			obj.put("lastname", u.getLastname());
-			obj.put("email", u.getEmail());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-    	return obj.toString();
-    }
      
 }

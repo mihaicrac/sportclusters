@@ -1,4 +1,4 @@
-package com.sportclusters.sportclusters.org.zerhusen.model.security;
+package com.sportclusters.sportclusters.security.model;
 
 
 

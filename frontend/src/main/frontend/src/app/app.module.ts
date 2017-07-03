@@ -13,9 +13,7 @@ import { RegisterComponent } from './register/index';
 import { AuthenticationService, RegisterService } from './_services/index';
 import { DetailsComponent } from './home/details.component';
 import { HomeModule } from './home/home.module';
-import { MyFormsModule } from './myForms.module';
-
-
+import { MyFormsModule } from './forms/myForms.module';
 
 @NgModule({
   imports:      [

@@ -1,46 +1,17 @@
-import { AuthenticationService } from '../_services';
-import { ServerClientService, Method } from '../_services/serverclient.service';
-import { Component, OnInit, Injectable } from '@angular/core';
-import { Headers, RequestOptions, Http } from '@angular/http';
-import { QuestionService } from "../forms/question.service";
+import { Component, Injectable } from '@angular/core';
+import { AuthenticationService } from '../_services/authentication.service';
 
 @Component({
   moduleId: module.id,
   templateUrl: 'home.component.html',
-  providers: [ServerClientService, QuestionService],
+  providers:[]
 })
 
 @Injectable()
-export class HomeComponent implements OnInit {
-  token: string;
-  error: string;
-  model: any = {};
-  homeUrl = '/api/home';
-  questions: any[];
+export class HomeComponent{
+  username:string = '';
 
-
-
-  constructor(private http: Http, private client: ServerClientService, private authentication: AuthenticationService, private qs: QuestionService) {
-    this.token = this.authentication.getToken();
-    this.questions = qs.getQuestions();
+  constructor(private authentication: AuthenticationService){
+    this.username = JSON.parse(localStorage.getItem('currentUser'))["username"];
   }
-
-  ngOnInit(): void {
-
-
-    const headers = new Headers({
-      'Authorization': 'Bearer ' + this.token
-    });
-
-    const options = new RequestOptions({ headers: headers });
-
-
-    this.client.getObservable(Method.GET, this.homeUrl, options).subscribe(
-      res => this.model = res,
-      error => this.error = <any>error);
-
-    return;
-
-  }
-
 }

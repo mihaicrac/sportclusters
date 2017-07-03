@@ -1,4 +1,4 @@
-package com.sportclusters.sportclusters.org.zerhusen.security.service;
+package com.sportclusters.sportclusters.security.service;
 
 
 
