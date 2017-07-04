@@ -31,8 +31,6 @@ public class HomeController {
 	public String userdetails(HttpServletRequest request) {
 
 		String authToken = request.getHeader(this.tokenHeader);
-		// authToken.startsWith("Bearer ")
-		// String authToken = header.substring(7);
 
 		if (authToken != null && authToken.startsWith("Bearer ")) {
 			authToken = authToken.substring(7);

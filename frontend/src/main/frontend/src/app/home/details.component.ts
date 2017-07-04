@@ -18,7 +18,6 @@ export class DetailsComponent{
 
   constructor(private http: Http, private client: ServerClientService, private authentication: AuthenticationService, private qs: QuestionService) {
     this.token = this.authentication.getToken();
-    this.questions = qs.getQuestionsDetails();
   }
 
   ngOnInit(): void {
@@ -31,10 +30,24 @@ export class DetailsComponent{
 
 
     this.client.getObservable(Method.GET, this.homeUrl, options).subscribe(
-      res => this.model = res,
+      res => { this.model = res; this.questions = this.qs.getQuestionsDetails(); this.getFormValues(); } ,
       error => this.error = <any>error);  
 
     return;
 
   }
+
+
+  getFormValues(): void {  
+    let newquestions = [];
+    for(var key in this.model) {
+      for (let ctrl of this.questions) {
+        if(key === ctrl.key){
+          ctrl.value = this.model[key];
+        }
+      }  
+    }  
+  }
+
+
 }

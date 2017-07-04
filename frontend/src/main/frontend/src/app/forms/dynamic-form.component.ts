@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChange } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { QuestionBase } from './question-base';
@@ -19,8 +19,21 @@ export class DynamicFormComponent implements OnInit {
   constructor(private qcs: QuestionControlService) { }
 
   ngOnInit() {
+    console.log("dyn-form");
+    console.log(this.questions);
     this.form = this.qcs.toFormGroup(this.questions);
+    console.log(this.form);
   }
+
+
+  ngOnChanges(changes: SimpleChange) {
+  for (let propName in changes) {
+    let chng = changes[propName];
+    let cur  = JSON.stringify(chng.currentValue);
+    let prev = JSON.stringify(chng.previousValue);
+    console.log(`${propName}: currentValue = ${cur}, previousValue = ${prev}`);
+  }
+}
 
   onSubmit() {
     this.payLoad = JSON.stringify(this.form.value);

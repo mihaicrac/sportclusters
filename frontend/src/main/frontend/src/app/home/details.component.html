@@ -1,4 +1,6 @@
 <div>
       <h2>User Details</h2>
-      <dynamic-form [questions]="questions"></dynamic-form>
-</div>
+      <div *ngIf="questions">
+            <dynamic-form [questions]="questions"></dynamic-form>
+      </div>
+ </div>     
