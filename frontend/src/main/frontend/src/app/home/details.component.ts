@@ -21,15 +21,7 @@ export class DetailsComponent{
   }
 
   ngOnInit(): void {
-
-    const headers = new Headers({
-      'Authorization': 'Bearer ' + this.token
-    });
-
-    const options = new RequestOptions({ headers: headers });
-
-
-    this.client.getObservable(Method.GET, this.homeUrl, options).subscribe(
+    this.client.getObservable(Method.GET, this.homeUrl).subscribe(
       res => { this.model = res; this.questions = this.qs.getQuestionsDetails(); this.getFormValues(); } ,
       error => this.error = <any>error);  
 

@@ -39,6 +39,8 @@ public class HomeController {
 		String username = jwtTokenUtil.getUsernameFromToken(authToken);
 		User u = userRepo.findByUsername(username);
 
+		String id = jwtTokenUtil.getIdFromToken(authToken);
+		
 		JSONObject obj = new JSONObject();
 		try {
 			obj.put("username", u.getUsername());
@@ -52,5 +54,6 @@ public class HomeController {
 
 		return obj.toString();
 	}
-
+	
+	
 }

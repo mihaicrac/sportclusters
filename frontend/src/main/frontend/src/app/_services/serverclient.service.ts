@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, RequestOptions } from '@angular/http';
-
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { Options } from 'ts-node/dist';
+import { AuthenticationService } from './authentication.service';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
@@ -14,11 +15,22 @@ export enum Method {
 
 @Injectable()
 export class ServerClientService {
+  options = {}
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private authentication: AuthenticationService) {
+    const headers = new Headers({
+      'Authorization': 'Bearer ' + this.authentication.getToken()
+    });
+    this.options = new RequestOptions({ headers: headers });
+
+  }
 
 
-  public getObservable<T>(typeH: Method, url: string, options: RequestOptions, payload?: string): Observable<T> {
+  public getObservable<T>(typeH: Method, url: string, options?: RequestOptions, payload?: string): Observable<T> {
+
+    if(options){
+      this.options = options;
+    }
 
     let resp = new Observable<Response>();
 

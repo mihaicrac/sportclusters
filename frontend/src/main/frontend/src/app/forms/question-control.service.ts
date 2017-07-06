@@ -16,8 +16,6 @@ export class QuestionControlService {
       console.log(group[question.key]);  
     });
 
-    
-
     return new FormGroup(group);
   }
 }
