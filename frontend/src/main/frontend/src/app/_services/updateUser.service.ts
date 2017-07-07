@@ -5,7 +5,7 @@ import { Method, ServerClientService } from './serverclient.service';
 
 @Injectable()
 export class UpdateUserService {
-    url = "/api/user/update"
+    url = "/api/user"
 
     constructor(private client: ServerClientService) {}
 

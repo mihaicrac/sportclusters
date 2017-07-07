@@ -9,7 +9,7 @@ import { UpdateUserService} from '../_services/updateUser.service'
   moduleId: module.id,
   selector: 'dynamic-form',
   templateUrl: 'dynamic-form.component.html',
-  providers: [QuestionControlService]
+  providers: [QuestionControlService, UpdateUserService]
 })
 export class DynamicFormComponent implements OnInit {
 

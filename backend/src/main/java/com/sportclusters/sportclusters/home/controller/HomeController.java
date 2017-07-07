@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,6 +54,45 @@ public class HomeController {
 		}
 
 		return obj.toString();
+	}
+	
+	
+	class UpdateUserReq{
+		String username;
+		String firstname;
+		String lastname;
+		String email;
+		public String getUsername() {
+			return username;
+		}
+		public void setUsername(String username) {
+			this.username = username;
+		}
+		public String getFirstname() {
+			return firstname;
+		}
+		public void setFirstname(String firstname) {
+			this.firstname = firstname;
+		}
+		public String getLastname() {
+			return lastname;
+		}
+		public void setLastname(String lastname) {
+			this.lastname = lastname;
+		}
+		public String getEmail() {
+			return email;
+		}
+		public void setEmail(String email) {
+			this.email = email;
+		}
+		
+	}
+	@RequestMapping(value = "/api/user", method = RequestMethod.POST)
+	public String updateUser(@RequestBody UpdateUserReq user){
+		
+		return "asdsa";
+		
 	}
 	
 	

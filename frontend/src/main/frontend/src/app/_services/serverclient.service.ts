@@ -35,7 +35,7 @@ export class ServerClientService {
     let resp = new Observable<Response>();
 
     if (typeH === Method.GET) {
-      resp = this.http.get(url, options);
+      resp = this.http.get(url, this.options);
     } else {
       resp = this.http.post(url, payload, options);
     }
