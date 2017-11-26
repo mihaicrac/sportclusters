@@ -10,7 +10,7 @@ export class UpdateUserService {
     constructor(private client: ServerClientService) {}
 
     updateUser<T>(model:any): Observable<T>{
-        return this.client.getObservable(Method.POST, this.url, model);      
+        return this.client.getObservable(Method.POST, this.url, undefined, model);      
     }
 
 }    

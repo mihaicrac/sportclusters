@@ -2,68 +2,120 @@ package com.sportclusters.sportclusters.security.model;
 
 
 
+import com.sportclusters.sportclusters.entity.Event;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "user")
 public class User {
 
     @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
-    private Long id;
+//    @Column(name = "ID")
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+//    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
 
-    @Column(name = "USERNAME", length = 50, unique = true)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(name = "id", columnDefinition = "CHAR(32)")
+    private String id;
+
+    @Column(name = "username", length = 50, unique = true)
     @NotNull
     @Size(min = 4, max = 50)
     private String username;
 
-    @Column(name = "PASSWORD", length = 100)
+    @Column(name = "password", length = 100)
     @NotNull
     @Size(min = 4, max = 100)
     private String password;
 
-    @Column(name = "FIRSTNAME", length = 50)
+    @Column(name = "firstname", length = 50)
     @NotNull
     @Size(min = 4, max = 50)
     private String firstname;
 
-    @Column(name = "LASTNAME", length = 50)
+    @Column(name = "lastname", length = 50)
     @NotNull
     @Size(min = 4, max = 50)
     private String lastname;
 
-    @Column(name = "EMAIL", length = 50)
+    @Column(name = "email", length = 50)
     @NotNull
     @Size(min = 4, max = 50)
     private String email;
 
-    @Column(name = "ENABLED")
+    @Column(name = "enabled")
     @NotNull
     private Boolean enabled;
 
-    @Column(name = "LASTPASSWORDRESETDATE")
+    @Column(name = "lastpasswordresetdate")
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
     private Date lastPasswordResetDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "USER_AUTHORITY",
-            joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
+            name = "user_authority",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")})
     private List<Authority> authorities;
 
-    public Long getId() {
+
+
+    @OneToMany(mappedBy = "owner")
+    public Collection<Event> myEvents = new ArrayList<>();
+
+
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "user_event",
+            joinColumns = @JoinColumn(name = "id_joined_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_event")
+    )
+    protected Set<Event> joiningEvents = new HashSet<Event>();
+
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if(this == obj){
+            return true;
+        }
+
+        if(!(obj instanceof User)){
+            return false;
+        }
+
+        User other = (User)obj;
+        if(this.getUsername() == null || other.getUsername() == null){
+            return false;
+        }
+
+        if(this.getUsername().equals(other.getUsername())){
+            return true;
+        }
+
+        return false;
+    }
+
+
+    @Override
+    public int hashCode() {
+
+        return getUsername().hashCode();
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -129,5 +181,21 @@ public class User {
 
     public void setLastPasswordResetDate(Date lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
+    }
+
+    public Collection<Event> getMyEvents() {
+        return myEvents;
+    }
+
+    public void setMyEvents(Collection<Event> myEvents) {
+        this.myEvents = myEvents;
+    }
+
+    public Set<Event> getJoiningEvents() {
+        return joiningEvents;
+    }
+
+    public void setJoiningEvents(Set<Event> joiningEvents) {
+        this.joiningEvents = joiningEvents;
     }
 }

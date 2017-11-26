@@ -19,6 +19,7 @@ export class ServerClientService {
 
   constructor(private http: Http, private authentication: AuthenticationService) {
     const headers = new Headers({
+      'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + this.authentication.getToken()
     });
     this.options = new RequestOptions({ headers: headers });
@@ -37,7 +38,7 @@ export class ServerClientService {
     if (typeH === Method.GET) {
       resp = this.http.get(url, this.options);
     } else {
-      resp = this.http.post(url, payload, options);
+      resp = this.http.post(url, payload, this.options);
     }
 
     return resp.map((response: Response) => {

@@ -2,21 +2,27 @@ package com.sportclusters.sportclusters.security.model;
 
 
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "AUTHORITY")
+@Table(name = "authority")
 public class Authority {
 
     @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "authority_seq")
-    @SequenceGenerator(name = "authority_seq", sequenceName = "authority_seq", allocationSize = 1)
-    private Long id;
+//    @Column(name = "ID")
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "authority_seq")
+//    @SequenceGenerator(name = "authority_seq", sequenceName = "authority_seq", allocationSize = 1)
 
-    @Column(name = "NAME", length = 50)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(name = "id", columnDefinition = "CHAR(32)")
+    private String id;
+
+    @Column(name = "name", length = 50)
     @NotNull
     @Enumerated(EnumType.STRING)
     private AuthorityName name;
@@ -24,11 +30,11 @@ public class Authority {
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
     private List<User> users;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

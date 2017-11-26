@@ -13,6 +13,7 @@ import { AuthenticationService, RegisterService } from './_services/index';
 import { DetailsComponent } from './home/details.component';
 import { HomeModule } from './home/home.module';
 import { MyFormsModule } from './forms/myForms.module';
+import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
   imports:      [
@@ -22,7 +23,10 @@ import { MyFormsModule } from './forms/myForms.module';
     HttpModule,
     AppRoutingModule,
     MyFormsModule,
-    HomeModule
+    HomeModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyCVyB3bo0qI0x0snk9SXSKDa81jUYpH_oo'
+    })
   ],
   declarations: [
     AppComponent,

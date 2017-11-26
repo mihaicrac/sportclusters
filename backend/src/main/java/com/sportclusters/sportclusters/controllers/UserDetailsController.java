@@ -1,7 +1,11 @@
-package com.sportclusters.sportclusters.home.controller;
+package com.sportclusters.sportclusters.controllers;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
+import com.sportclusters.sportclusters.errors.UserNotFoundException;
+import com.sportclusters.sportclusters.services.eventService.model.EventAddReq;
+import com.sportclusters.sportclusters.services.eventService.EventService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +15,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sportclusters.sportclusters.UpdateUserReq;
 import com.sportclusters.sportclusters.security.JwtTokenUtil;
 import com.sportclusters.sportclusters.security.model.User;
 import com.sportclusters.sportclusters.security.repository.UserRepository;
 
 @RestController
-public class HomeController {
+public class UserDetailsController {
 
 	@Autowired
 	private UserRepository userRepo;
-	
+
+
+	@Autowired
+	private EventService eventService;
+
 	@Value("${jwt.header}")
     private String tokenHeader;
 	
@@ -57,42 +66,28 @@ public class HomeController {
 	}
 	
 	
-	class UpdateUserReq{
-		String username;
-		String firstname;
-		String lastname;
-		String email;
-		public String getUsername() {
-			return username;
-		}
-		public void setUsername(String username) {
-			this.username = username;
-		}
-		public String getFirstname() {
-			return firstname;
-		}
-		public void setFirstname(String firstname) {
-			this.firstname = firstname;
-		}
-		public String getLastname() {
-			return lastname;
-		}
-		public void setLastname(String lastname) {
-			this.lastname = lastname;
-		}
-		public String getEmail() {
-			return email;
-		}
-		public void setEmail(String email) {
-			this.email = email;
-		}
-		
-	}
+	
 	@RequestMapping(value = "/api/user", method = RequestMethod.POST)
 	public String updateUser(@RequestBody UpdateUserReq user){
 		
+		System.out.println("asdsadsa");
+		
+		User u = userRepo.findByUsername(user.getUsername());
+		u.setEmail(user.getEmail());
+		u.setFirstname(user.getFirstname());
+		u.setLastname(user.getLastname());
+		u.setUsername(user.getUsername());
+		userRepo.save(u);
+		
 		return "asdsa";
 		
+	}
+
+
+
+	@RequestMapping(value = "/api/addEvent", method = RequestMethod.POST)
+	public void addEvent(@Valid @RequestBody EventAddReq event) throws UserNotFoundException {
+		eventService.addEvent(event);
 	}
 	
 	
