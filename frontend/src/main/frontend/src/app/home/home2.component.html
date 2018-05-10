@@ -1,0 +1,27 @@
+
+	<h1>Hi {{username}} !</h1>
+	<div class="row">
+		<div class="col-sm-2 sidenav" style="background-color:lightblue;">
+      		<ul class="nav nav-pills nav-stacked">
+        		<li>
+					<a routerLink="details" routerLinkActive="active">Account details</a>
+				</li>
+        		<li>
+					<a routerLink="userList" routerLinkActive="active">Users List</a>
+				</li>
+        		<li>
+					<a routerLink="eventList" routerLinkActive="active">Events List</a>
+				</li>
+        		<li>
+					<a routerLink="searchEvent" routerLinkActive="active">Search Event</a>
+				</li>
+				<li>
+					<a routerLink="createEvent" routerLinkActive="active">Create Event</a>
+				</li>
+      		</ul><br>
+		</div>	  
+		<div class="col-sm-10" style="background-color:lightgreen;">
+			<router-outlet></router-outlet>	
+		</div>	
+	</div>
+	

@@ -2,10 +2,10 @@ package com.sportclusters.sportclusters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sportclusters.sportclusters.entity.Event;
-import com.sportclusters.sportclusters.errors.UserNotFoundException;
+import com.sportclusters.sportclusters.errors.EntityNotFoundException;
 import com.sportclusters.sportclusters.services.eventService.model.EventAddReq;
-import com.sportclusters.sportclusters.services.eventService.EventService;
-import com.sportclusters.sportclusters.services.eventService.model.LocationGet;
+import com.sportclusters.sportclusters.services.eventService.EventServiceImpl;
+import com.sportclusters.sportclusters.services.eventService.model.LocationSetReq;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.test.web.servlet.*;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SportclustersApplicationTests {
 
 	@Autowired
-	private EventService eventService;
+	private EventServiceImpl eventService;
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -53,10 +53,10 @@ public class SportclustersApplicationTests {
 
 
 	@Test
-	public void TestAddEventService() throws UserNotFoundException {
+	public void TestAddEventService() throws EntityNotFoundException {
 		EventAddReq req = new EventAddReq();
 
-		LocationGet l = new LocationGet();
+		LocationSetReq l = new LocationSetReq();
 		l.setLocation(UUID.randomUUID());
 		req.setLocation(l);
 	//	req.setOwner(10L);
@@ -68,23 +68,23 @@ public class SportclustersApplicationTests {
 		}
 	}
 
-//	@Ignore
+	@Ignore
 	@Test()
 	public void TestAddEvent() throws Exception{
 
 		EventAddReq req = new EventAddReq();
 
-		LocationGet l = new LocationGet();
+		LocationSetReq l = new LocationSetReq();
 		l.setLocation(UUID.randomUUID());
 		req.setLocation(l);
-		req.setDate(new Date());
+		req.setDate(new Date().getTime());
 		req.setOwner(UUID.randomUUID());
 
 		ObjectMapper mapper = new ObjectMapper();
 
 
 		ResultActions res = mockMvc.perform(
-				post("/api/addEvent")
+				post("/api/events")
 						.contentType(MediaType.APPLICATION_JSON_UTF8)
 						.content(mapper.writeValueAsString(req))
 

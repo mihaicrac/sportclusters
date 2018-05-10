@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+<changeSet author="mcrac" id="event-1">
+    <createTable tableName="event">
+
+        <column name="id" type="BINARY(16)">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk-id-event"/>
+        </column>
+
+        <column name="start_date" type="DATETIME">
+            <constraints nullable="false"/>
+        </column>
+
+        <column name="id_location" type="BINARY(16)">
+            <constraints nullable="false" references="location(id)" foreignKeyName="fk-id-location"/>
+        </column>
+
+        <column name="max_players_number" type="INT"/>
+
+        <column name="id_owner" type="BINARY(16)">
+            <constraints nullable="false" references="user(id)" foreignKeyName="fk-id-user-event"/>
+        </column>
+
+        <column name="id_eventtype" type="BINARY(16)">
+            <constraints nullable="false" references="eventtype(id)" foreignKeyName="fk-id-eventtype-event"/>
+        </column>
+
+    </createTable>
+
+    <addUniqueConstraint columnNames="id_owner, start_date" constraintName="uq-id_owner-start_date-event" tableName="event"/>
+
+</changeSet>
+
+
+</databaseChangeLog>

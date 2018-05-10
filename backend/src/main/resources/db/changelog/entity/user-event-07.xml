@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet author="mcrac" id="user-event-1">
+        <createTable tableName="user_event">
+
+            <column name="id" type="BINARY(16)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pq-id-user-event"/>
+            </column>
+
+            <column name="guestsnumber" type="INT"/>
+
+            <column name="id_joined_user" type="BINARY(16)">
+                <constraints nullable="false" references="user(id)" foreignKeyName="fk-id-user-user-event"/>
+            </column>
+
+            <column name="id_event" type="BINARY(16)">
+                <constraints nullable="false" references="event(id)" foreignKeyName="fk-id-event-user-event"/>
+            </column>
+
+        </createTable>
+
+        <addUniqueConstraint columnNames="id_joined_user, id_event" constraintName="uq-id_joined_user-id_event-user-event" tableName="user_event"/>
+
+    </changeSet>
+
+</databaseChangeLog>

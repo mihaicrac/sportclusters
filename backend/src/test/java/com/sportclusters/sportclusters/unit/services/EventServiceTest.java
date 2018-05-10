@@ -2,14 +2,17 @@ package com.sportclusters.sportclusters.unit.services;
 
 import com.sportclusters.sportclusters.entity.Event;
 import com.sportclusters.sportclusters.entity.Location;
-import com.sportclusters.sportclusters.errors.UserNotFoundException;
-import com.sportclusters.sportclusters.security.model.User;
+import com.sportclusters.sportclusters.errors.EntityNotFoundException;
+import com.sportclusters.sportclusters.entity.User;
+import com.sportclusters.sportclusters.services.eventService.EventService;
 import com.sportclusters.sportclusters.services.eventService.model.EventAddReq;
 import com.sportclusters.sportclusters.repositories.EventRepository;
-import com.sportclusters.sportclusters.services.eventService.EventService;
-import com.sportclusters.sportclusters.services.eventService.model.LocationGet;
+import com.sportclusters.sportclusters.services.eventService.EventServiceImpl;
+import com.sportclusters.sportclusters.services.eventService.model.LocationSetReq;
 import com.sportclusters.sportclusters.services.locationService.LocationService;
-import com.sportclusters.sportclusters.services.UserService;
+import com.sportclusters.sportclusters.services.locationService.LocationServiceImpl;
+import com.sportclusters.sportclusters.services.userService.UserService;
+import com.sportclusters.sportclusters.services.userService.UserServiceImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,8 +37,8 @@ public class EventServiceTest {
     static class EmployeeServiceImplTestContextConfiguration {
 
         @Bean
-        public EventService eventService() {
-            return new EventService();
+        public EventServiceImpl eventService() {
+            return new EventServiceImpl();
         }
 
         @Bean
@@ -63,10 +66,10 @@ public class EventServiceTest {
 
     // without an owner
     @Test(expected = ConstraintViolationException.class)
-    public void addEvent_WithoutOwnerTest() throws UserNotFoundException {
+    public void addEvent_WithoutOwnerTest() throws EntityNotFoundException {
 
         EventAddReq req = new EventAddReq();
-        LocationGet l = new LocationGet();
+        LocationSetReq l = new LocationSetReq();
         l.setLocation(UUID.randomUUID());
         req.setLocation(l);
 
@@ -77,17 +80,17 @@ public class EventServiceTest {
 
 
     // with an owner that doesn't exist in DB
-    @Test(expected = UserNotFoundException.class)
-    public void addEvent_WithWrongOwner() throws UserNotFoundException {
+    @Test(expected = EntityNotFoundException.class)
+    public void addEvent_WithWrongOwner() throws EntityNotFoundException {
 
         EventAddReq req = new EventAddReq();
         Date now = new Date();
 
-        LocationGet l = new LocationGet();
+        LocationSetReq l = new LocationSetReq();
         l.setLocation(UUID.randomUUID());
         req.setLocation(l);
         req.setOwner(UUID.randomUUID());
-        req.setDate(now);
+        req.setDate(now.getTime());
 
 
         when(userServiceMock.findUser(req.getOwner())).thenReturn(null);
@@ -100,19 +103,19 @@ public class EventServiceTest {
 
     // without StartDate
     @Test(expected = ConstraintViolationException.class)
-    public void addEvent_WithoutDate() throws UserNotFoundException {
+    public void addEvent_WithoutDate() throws EntityNotFoundException {
 
         EventAddReq req = new EventAddReq();
         Date now = new Date();
 
-        LocationGet l = new LocationGet();
+        LocationSetReq l = new LocationSetReq();
         l.setLocation(UUID.randomUUID());
         req.setLocation(l);
         req.setOwner(UUID.randomUUID());
 
         User u = new User();
     //    u.setId(10L);
-        u.setId(UUID.randomUUID().toString().replace("-",""));
+        u.setId(UUID.randomUUID());
         u.setUsername("asd");
 
         when(userServiceMock.findUser(req.getOwner())).thenReturn(u);
@@ -126,29 +129,29 @@ public class EventServiceTest {
 
     // with ok input
     @Test
-    public void addEvent_WithGoodOwner_EventLocationId() throws UserNotFoundException {
+    public void addEvent_WithGoodOwner_EventLocationId() throws EntityNotFoundException {
 
         EventAddReq req = new EventAddReq();
         Date now = new Date();
 
-        LocationGet l = new LocationGet();
+        LocationSetReq l = new LocationSetReq();
         l.setLocation(UUID.randomUUID());
 
         req.setLocation(l);
     //    req.setOwner(10L);
         req.setOwner(UUID.randomUUID());
-        req.setDate(now);
+        req.setDate(now.getTime());
 
 
         User u = new User();
-        u.setId(UUID.randomUUID().toString().replace("-",""));
+        u.setId(UUID.randomUUID());
         when(userServiceMock.findUser(req.getOwner())).thenReturn(u);
 
 
 
         Location location = new Location();
         location.setId(UUID.randomUUID());
-        when(locationServiceMock.findLocation(req.getLocation().getLocation())).thenReturn(location);
+        when(locationServiceMock.getLocation(req.getLocation().getLocation())).thenReturn(location);
 
 
         Event e = new Event();

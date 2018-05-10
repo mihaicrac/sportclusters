@@ -1,151 +1,192 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { RegisterService } from '../_services/index';
 import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl, ValidatorFn } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/observable/of';
+
+import { UserService, UserPostReq } from '../rest-service/services/user';
+import { VALID } from '@angular/forms/src/model';
 
 @Component({
   moduleId: module.id,
-  templateUrl: 'register.component.html'
+  templateUrl: 'register.component.html',
+  styleUrls: ['register.component.css']
 })
 
 export class RegisterComponent implements OnInit {
-  model: any = {};
-  loading = false;
-  error = '';
+  
   registerForm: FormGroup;
-  submitted = false;
-
-
-  formErrors = {
-    'username': '',
-    'password': '',
-    'firstname': '',
-    'lastname': '',
-    'email': '',
-    'confpassword': ''
-  };
-
-  validationMessages = {
-    'username': {
-      'required': 'Name is required.',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
-    },
-    'password': {
-      'required': 'Power is required.'
-    },
-    'firstname': {
-      'required': 'Username is required.'
-    },
-    'lastname': {
-      'required': 'Lastname is required.'
-    },
-    'email': {
-      'required': 'Email is required.'
-    },
-    'confpassword': {
-      'required': 'Confpassword is required.',
-      'InvalidConfPass': 'ConfPassword must match password'
-    }
-  };
-
+  error:string;
 
   constructor(private router: Router,
-    private registerService: RegisterService,
+    private userService: UserService,
     private fb: FormBuilder) { }
-
-  register() {
-    this.loading = true;
-    this.registerService.register(this.model.username, this.model.password, this.model.firstname, this.model.lastname, this.model.email)
-      .subscribe(result => {
-        if (result === true) {
-          // Register successful
-          this.router.navigate(['home']);
-        } else {
-          // Register failed
-          this.error = 'Error while registering';
-          this.loading = false;
-        }
-      }, error => {
-        this.loading = false;
-        this.error = error;
-      });
-  }
 
   ngOnInit(): void {
     this.buildForm();
   }
-
-
+  
   buildForm(): void {
     this.registerForm = this.fb.group({
       'username': ['', [
-        Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(24),
-        //  forbiddenNameValidator(/bob/i)
+                        Validators.required,
+                        Validators.maxLength(40)
+                      ],
+                        this.sameUsernameInDB().bind(this)
+                      ,
+                    
+      ],
+      'firstname': ['', [
+                          Validators.maxLength(40)
+                        ] 
+      ],
+      'lastname': ['',[
+                        Validators.maxLength(40)
+                      ]   
+      ],
+      'email': ['', [
+                      Validators.required,
+                      Validators.maxLength(254),
+                    ],
+                    this.sameEmailInDB().bind(this),
       ]
-      ],
-      'password': ['', Validators.required
-      ],
-      'firstname': ['', Validators.required
-      ],
-      'lastname': ['', Validators.required
-      ],
-      'email': ['', Validators.required
-      ],
     });
 
-    const confpassword = new FormControl('', [Validators.required, this.sameControlValueValidator(this.registerForm.controls['password'])]);
+    const confpassword = new FormControl('');
     this.registerForm.addControl('confpassword', confpassword);
-
-
-    this.registerForm.valueChanges
-      .subscribe(data => this.onValueChanged(data));
-
-    this.onValueChanged(); // (re)set validation messages now
+    const password = new FormControl('');
+    this.registerForm.addControl('password', password);
+    confpassword.setValidators([Validators.required, this.sameControlValueValidator(this.registerForm.controls['password'], "invalidConfPass")]);
+    password.setValidators([Validators.required]);
+    password.valueChanges.subscribe(result => {
+      confpassword.updateValueAndValidity();
+    });
+    
   }
 
 
-  onValueChanged(data?: any) {
-    if (!this.registerForm) { return; }
-    const form = this.registerForm;
-
-
-    for (const field in this.formErrors) {
-      // clear previous error message (if any)
-      this.formErrors[field] = '';
-      const control = form.get(field);
-
-      if (control && control.dirty && !control.valid) {
-        const messages = this.validationMessages[field];
-        for (const key in control.errors) {
-          this.formErrors[field] += messages[key] + ' ';
+  register() {
+    this.userService.post(this.registerForm.value)
+      .subscribe(result => {
+        if (result === true) {
+          this.router.navigate(['home']);
+        } else {
+          this.error = 'Error while registering';
         }
-      }
-    }
+      }, error => {
+        this.error = error.message;
+      });
   }
-
 
   onSubmit() {
-    this.submitted = true;
     if (this.registerForm.valid) {
-      this.model = this.registerForm.value;
       this.register();
     }
   }
 
-  sameControlValueValidator(otherControl: AbstractControl): ValidatorFn {
+  isInValid(){
+    return (this.registerForm.pending || this.registerForm.invalid); 
+  }
+
+  sameControlValueValidator(otherControl: AbstractControl, key:string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
       const value = control.value;
-      let no = true;
+      let same = false;
       if (otherControl.value === value) {
-        no = false;
+        same = true;
       }
-      return no ? { 'InvalidConfPass': { value } } : null;
+      return same ? null : JSON.parse('{ "'+key+'" :  true }');
     };
   }
 
+  //TO DO refactor
+  sameUsernameInDB(): ValidatorFn {
+    return (control: AbstractControl): Observable<{ [key: string]: any }> => {
+      const value = control.value;
+      if(value){
+        return this.userService.existsUsername(value).map((value:boolean) => {
+          return value ? { 'sameUsername': true } : null;
+        });
+      }else{
+        return Observable.of({ 'sameUsername': true });
+      }  
+       
+    };
+  }
+
+  //TO DO refactor 
+  sameEmailInDB(): ValidatorFn {
+    return (control: AbstractControl): Observable<{ [key: string]: any }> => {
+      const value = control.value;
+      if(value){
+        return this.userService.existsEmail(value).map((value:boolean) => {
+          return value ? { 'sameEmail': true } : null;
+        })
+      }else{
+        return Observable.of({ 'sameEmail': true });
+      }  
+       
+    };
+  }
+
+  getMsgs(control:string):string[]{
+    return Object.keys(this.validationMessages[control]);
+  }
+
+  validationMessages = {
+    'username': {
+      'required': 'username is required',
+      'maxlength': 'username max length is 40 characters long',
+      'sameUsername': 'same username is already registered'
+    },
+    'password': {
+      'required': 'password is required',
+      'invalidPass': 'password must match confpassword'
+    },
+    'firstname': {
+      'maxlength': 'firstname cannot be more than 40 characters long'
+    },
+    'lastname': {
+      'maxlength': 'lastname cannot be more than 40 characters long'
+    },
+    'email': {
+      'required': 'email is required',
+      'maxlength':'email max length is 254 characters long',
+      'sameEmail': 'same email is already registered',
+    },
+    'confpassword': {
+      'required': 'confpassword is required',
+      'invalidConfPass': 'confpassword must match password'
+    }
+  };
+
+
+  get username(){
+    return this.registerForm.get('username');
+  }
+
+  get password(){
+    return this.registerForm.get('password');
+  }
+
+  get firstname(){
+    return this.registerForm.get('firstname');
+  }
+
+  get lastname(){
+    return this.registerForm.get('lastname');
+  }
+
+  get email(){
+    return this.registerForm.get('email');
+  }
+
+  get confpassword(){
+    return this.registerForm.get('confpassword');
+  }
 
 }
 

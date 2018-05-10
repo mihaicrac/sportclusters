@@ -1,11 +1,10 @@
 package com.sportclusters.sportclusters.config;
 
-
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,7 +22,7 @@ import com.sportclusters.sportclusters.security.JwtAuthenticationTokenFilter;
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled=true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -31,13 +30,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-    @Autowired
-    public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder
-                .userDetailsService(this.userDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -61,15 +53,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
                 .authorizeRequests()
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/api/tokens/**").permitAll()
+                .antMatchers("/api/users/email/**").permitAll()
+                .antMatchers("/api/users/username/**").permitAll()
                 .antMatchers("/index.html", "/").permitAll()
                 .antMatchers("/**.js", "/**.css","/**.jsp").permitAll()
-                .antMatchers("/doregister").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/login**").permitAll()
-                .anyRequest().permitAll();
-        		
-            //    .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .requiresChannel()
+                .antMatchers("*").requiresSecure();
+
+        //    .anyRequest().authenticated();
 
         // Custom JWT based security filter
         httpSecurity
@@ -78,4 +75,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // disable page caching
         httpSecurity.headers().cacheControl();
     }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(this.userDetailsService)
+                .passwordEncoder(passwordEncoder());
+
+    }
+
+
+    @Bean(name="myAuthenticationManager")
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
 }

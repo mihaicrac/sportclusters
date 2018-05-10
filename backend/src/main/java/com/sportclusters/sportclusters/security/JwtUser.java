@@ -8,13 +8,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by stephan on 20.03.16.
  */
 public class JwtUser implements UserDetails {
 
-    private final String id;
+    private final UUID id;
     private final String username;
     private final String firstname;
     private final String lastname;
@@ -25,7 +26,7 @@ public class JwtUser implements UserDetails {
     private final Date lastPasswordResetDate;
 
     public JwtUser(
-            String id,
+            UUID id,
             String username,
             String firstname,
             String lastname,
@@ -46,7 +47,7 @@ public class JwtUser implements UserDetails {
     }
 
     @JsonIgnore
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 

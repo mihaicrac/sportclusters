@@ -1,44 +1,63 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { AuthenticationService } from '../_services/index';
+import { AuthenticationService } from '../rest-service/services';
+import { LoginReq } from '../rest-service/services/authentication/model';
+import { ApiError } from '../model';
 
 @Component({
     moduleId: module.id,
     templateUrl: 'login.component.html',
     styleUrls: ['login.component.css']
 })
-
 export class LoginComponent implements OnInit {
-    model: any = {};
-    loading = false;
-    error = '';
+
+    loginForm: FormGroup;
+    error: String;
 
     constructor(
         private router: Router,
-        private authenticationService: AuthenticationService) { }
+        private authenticationService: AuthenticationService,
+        private fb: FormBuilder) { }
 
     ngOnInit() {
-        // reset login status
         this.authenticationService.logout();
+        this.loginForm = this.fb.group({
+            username:['', Validators.required],
+            password:['', Validators.required]    
+        });    
+    }
+
+    onSubmit(){
+        if(this.loginForm.valid){
+            this.login();
+        }
     }
 
     login() {
-        this.loading = true;
-        this.authenticationService.login(this.model.username, this.model.password)
+        this.authenticationService.login(this.loginForm.value)
             .subscribe(result => {
                 if (result === true) {
-                    // login successful
                     this.router.navigate(['home']);
                 } else {
-                    // login failed
                     this.error = 'Username or password is incorrect';
-                    this.loading = false;
                 }
             }, error => {
-              this.loading = false;
-              this.error = error;
+                if((<ApiError>error).message){
+                    this.error = error.message;
+                }else{
+                    this.error = error;
+                }
             });
+    }
+
+    get username(){
+        return this.loginForm.get('username');
+    }
+
+    get password(){
+        return this.loginForm.get('password');
     }
 
 }

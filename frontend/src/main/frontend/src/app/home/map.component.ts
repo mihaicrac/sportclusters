@@ -1,5 +1,5 @@
 import { AfterViewInit, Component } from '@angular/core';
-import {MdDialog, MdDialogRef} from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 declare var google;
 
@@ -11,7 +11,7 @@ declare var google;
 export class DialogResultExample {
   selectedOption: string;
 
-  constructor(public dialog: MdDialog) {}
+  constructor(public dialog: MatDialog) {}
 
   openDialog() {
     let dialogRef = this.dialog.open(DialogResultExampleDialog);
@@ -32,7 +32,7 @@ export class DialogResultExampleDialog implements AfterViewInit{
   marker:any;
   map:any;
   
-  constructor(public dialogRef: MdDialogRef<DialogResultExampleDialog>) {
+  constructor(public dialogRef: MatDialogRef<DialogResultExampleDialog>) {
     console.log('asdsasadds');
   }
 

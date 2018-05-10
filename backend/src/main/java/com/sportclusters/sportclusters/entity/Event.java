@@ -1,15 +1,10 @@
 package com.sportclusters.sportclusters.entity;
 
-import com.sportclusters.sportclusters.security.model.User;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 @Entity
@@ -17,75 +12,86 @@ import java.util.UUID;
 public class Event {
 
     @Id
- //   @Column(name = "ID")
- //   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_seq")
- //   @SequenceGenerator(name = "event_seq", sequenceName = "event_seq", allocationSize = 1)
-
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "ID", columnDefinition = "CHAR(32)")
     private UUID id;
 
 
-    @Column(name = "DATE")
+    @Column(name = "START_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
     private Date date;
 
 
-    @Column(name = "MAXPLAYERSNUMBER")
+    @Column(name = "MAX_PLAYERS_NUMBER")
     private Integer maxPlayersNumber;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="IDUSER")
+    @JoinColumn(name="ID_OWNER")
     @NotNull
     private User owner;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "EVENT_LOCATION",
-            joinColumns = @JoinColumn(name = "IDEVENT"),
-            inverseJoinColumns = @JoinColumn(name ="IDLOCATION", nullable = false))
+    @JoinColumn(name="ID_LOCATION")
     private Location location;
 
 
-    @ManyToMany(mappedBy = "joiningEvents")
-    protected Set<User> joinedUsers = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ID_EVENTTYPE")
+    private EventType eventType;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<UserEvent> joinedUsers = new ArrayList<>();
 
 
-    @Override
-    public boolean equals(Object obj) {
-        if(this == obj){
-            return true;
+    public void addUser(User user, Integer userGuests) {
+        UserEvent userEvent = new UserEvent();
+        userEvent.setEvent(this);
+        userEvent.setUser(user);
+        userEvent.setGuestsNumber(userGuests);
+        joinedUsers.add(userEvent);
+    }
+
+    public void removeUser(User user) {
+        for (Iterator<UserEvent> iterator = joinedUsers.iterator();
+             iterator.hasNext(); ) {
+            UserEvent userEvent = iterator.next();
+
+            if (userEvent.getEvent().equals(this) &&
+                    userEvent.getUser().equals(user)) {
+                iterator.remove();
+                userEvent.setEvent(null);
+                userEvent.setUser(null);
+            }
         }
-
-        if(!(obj instanceof Event)){
-            return false;
-        }
-
-
-        Event other = (Event)obj;
-        if(this.getOwner() == null || other.getOwner() == null
-                || this.getDate() == null || other.getDate() == null){
-            return false;
-        }
-
-        if(this.getOwner().equals(other.getOwner())
-                && this.getDate().equals(other.getDate())){
-            return true;
-        }
-
-        return false;
-
     }
 
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Event event = (Event) o;
+
+        if (!date.equals(event.date)) return false;
+        if (!owner.equals(event.owner)) return false;
+        return location.equals(event.location);
+    }
+
+    @Override
     public int hashCode() {
-        String str = this.getOwner().getUsername() + this.getDate().toString();
-        return str.hashCode();
+        int result = date.hashCode();
+        result = 31 * result + owner.hashCode();
+        result = 31 * result + location.hashCode();
+        return result;
     }
 
     public UUID getId() {
@@ -120,11 +126,27 @@ public class Event {
         this.date = date;
     }
 
-    public Set<User> getJoinedUsers() {
+    public Integer getMaxPlayersNumber() {
+        return maxPlayersNumber;
+    }
+
+    public void setMaxPlayersNumber(Integer maxPlayersNumber) {
+        this.maxPlayersNumber = maxPlayersNumber;
+    }
+
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
+    }
+
+    public List<UserEvent> getJoinedUsers() {
         return joinedUsers;
     }
 
-    public void setJoinedUsers(Set<User> joinedUsers) {
+    public void setJoinedUsers(List<UserEvent> joinedUsers) {
         this.joinedUsers = joinedUsers;
     }
 }

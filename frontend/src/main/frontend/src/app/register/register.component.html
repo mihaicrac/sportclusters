@@ -1,66 +1,85 @@
-<div class="col-md-6 col-md-offset-3">
-	<div class="login-page">
-		<div class="form">
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        <mat-card class="m-auto">
+            <mat-card-content>
+                <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="m-auto" novalidate>
+                    <div class="form-group m-2">
+                        <mat-form-field>
+                            <input matInput placeholder="username" formControlName="username">
+                            <mat-progress-bar *ngIf="username.pending" mode="indeterminate"></mat-progress-bar>
+                            <mat-error *ngIf="username.errors && username.errors['required']">
+                                {{validationMessages.username.required}}
+                            </mat-error>
+                            <mat-error *ngIf="username.errors && username.errors['maxlength']">
+                                {{validationMessages.username.maxlength}}
+                            </mat-error>
+                            <mat-error *ngIf="username.errors && username.errors['sameUsername']">
+                                {{validationMessages.username.sameUsername}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group m-2">
+                        <mat-form-field>
+                            <input matInput placeholder="firstName" formControlName="firstname">
+                            <mat-error *ngIf="firstname.errors && firstname.errors['maxlength']">
+                                {{validationMessages.firstname.maxlength}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group m-2">
+                        <mat-form-field>
+                            <input matInput placeholder="lastName" formControlName="lastname">
+                            <mat-error *ngIf="lastname.errors && lastname.errors['maxlength']">
+                                {{validationMessages.lastname.maxlength}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group m-2">
+                        <mat-form-field>
+                            <input matInput placeholder="email" formControlName="email" type="email">
+                            <mat-progress-bar *ngIf="email.pending" mode="indeterminate"></mat-progress-bar>
+                            <mat-error *ngIf="email.errors && email.errors['required']">
+                                {{validationMessages.email.required}}
+                            </mat-error>
+                            <mat-error *ngIf="email.errors && email.errors['maxlength']">
+                                {{validationMessages.email.maxlength}}
+                            </mat-error>
+                            <mat-error *ngIf="email.errors && email.errors['sameEmail']">
+                                {{validationMessages.email.sameEmail}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group m-2">
+                        <mat-form-field>
+                            <input matInput placeholder="password" formControlName="password" type="password">
+                            <mat-error *ngIf="password.errors && password.errors['required']">
+                                {{validationMessages.password.required}}
+                            </mat-error>
+                            <mat-error *ngIf="password.errors && password.errors['invalidPass']">
+                                {{validationMessages.password.invalidPass}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group m-2">
+                        <mat-form-field>
+                            <input matInput placeholder="confpassword" formControlName="confpassword" type="password">
+                            <mat-error *ngIf="confpassword.errors && confpassword.errors['required']">
+                                {{validationMessages.confpassword.required}}
+                            </mat-error>
+                            <mat-error *ngIf="confpassword.errors && confpassword.errors['invalidConfPass']">
+                                {{validationMessages.confpassword.invalidConfPass}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <button mat-raised-button color="primary" [disabled]="isInValid()" class="form-group m-2">Register</button>
+                    <button mat-raised-button color="primary" [routerLink]="['/login']" class="form-group m-2">Cancel</button>
 
-			<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                    <div *ngIf="error" class="alert alert-danger form-group m-2" role="alert">
+                        {{error}}
+                    </div>
 
-				<div class="form-group">
-					<input type="text" id="username" class="form-control"
-						formControlName="username" placeholder="username" required>
-					<div *ngIf="formErrors.username" class="alert alert-danger">{{
-						formErrors.username}}</div>
-				</div>
-
-
-				<div class="form-group">
-					<input type="text" id="firstname" class="form-control"
-						formControlName="firstname" placeholder="firstname" required>
-					<div *ngIf="formErrors.firstname" class="alert alert-danger">{{
-						formErrors.firstname}}</div>
-				</div>
-
-				<div class="form-group">
-					<input type="text" id="lastname" class="form-control"
-						formControlName="lastname" placeholder="lastname" required>
-					<div *ngIf="formErrors.lastname" class="alert alert-danger">{{
-						formErrors.lastname}}</div>
-				</div>
-
-				
-				<div class="form-group">
-					<input type="text" id="email" class="form-control"
-						formControlName="email" placeholder="email" required>
-					<div *ngIf="formErrors.email" class="alert alert-danger">{{
-						formErrors.email}}</div>
-				</div>
-
-
-				
-				<div class="form-group">
-					<input type="text" id="password" class="form-control"
-						formControlName="password" placeholder="password" required>
-					<div *ngIf="formErrors.password" class="alert alert-danger">{{
-						formErrors.password}}</div>
-				</div>
-
-
-				
-				<div class="form-group">
-					<input type="text" id="confpassword" class="form-control"
-						formControlName="confpassword" placeholder="password" required>
-					<div *ngIf="formErrors.confpassword" class="alert alert-danger">{{
-						formErrors.confpassword}}</div>
-				</div>
-				
-
-				<div class="form-group">
-					<button [disabled]="!registerForm.valid" class="btn btn-primary">Register</button>
-					<button [routerLink]="['/login']" class="btn btn-primary">Cancel</button>
-				</div>
-
-
-			</form>
-
-		</div>
-	</div>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>

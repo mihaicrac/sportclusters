@@ -2,6 +2,7 @@ package com.sportclusters.sportclusters.security;
 
 
 
+import com.sportclusters.sportclusters.errors.UnauthorizedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;

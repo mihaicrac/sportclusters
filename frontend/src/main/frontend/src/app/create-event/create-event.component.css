@@ -1,0 +1,30 @@
+.container {
+    background-color: aqua;
+}
+
+.card{
+    margin-top: 20px;
+}
+
+.date > * {
+    width: 120px;
+}
+
+.number > *{
+    width:45px;
+}
+
+form {
+    width: 270px;
+    margin: auto;
+}
+
+form > * {
+    text-align: start;
+}
+
+.map {
+    height: 450px;
+}
+
+

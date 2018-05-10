@@ -1,7 +1,4 @@
-a {
-    cursor: pointer;
-}
-
-.help-block {
-    font-size: 12px;
+:host {
+    height:100%;
+    display: block;
 }

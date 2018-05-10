@@ -1,39 +1,27 @@
 
 import { NgModule, OnInit} from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { CoreModule } from './core/core.module';
+import { AppRoutingModule } from './app-routing.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import {AppRoutingModule} from './app-routing.module';
+import { RegisterModule } from './register/register.module';
+import { LoginModule } from './login/login.module';
+import { HomeModule } from './home/home.module';
 
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/index';
-import { RegisterComponent } from './register/index';
-import { AuthenticationService, RegisterService } from './_services/index';
-import { DetailsComponent } from './home/details.component';
-import { HomeModule } from './home/home.module';
-import { MyFormsModule } from './forms/myForms.module';
-import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
   imports:      [
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpModule,
+    CoreModule,
     AppRoutingModule,
-    MyFormsModule,
-    HomeModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCVyB3bo0qI0x0snk9SXSKDa81jUYpH_oo'
-    })
+    NgbModule.forRoot(),
+    RegisterModule,
+    LoginModule,
+    HomeModule 
   ],
   declarations: [
-    AppComponent,
-    LoginComponent,
-    RegisterComponent
+    AppComponent
   ],
-  providers: [ AuthenticationService, RegisterService],
   bootstrap: [ AppComponent ]
 })
 export class AppModule {

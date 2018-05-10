@@ -1,33 +1,32 @@
 import { Component } from '@angular/core';
 import { QuestionService } from '../forms/question.service'
-import { Headers, RequestOptions, Http } from '@angular/http';
-import { ServerClientService, Method } from '../_services/serverclient.service';
-import { AuthenticationService } from '../_services/authentication.service';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+
+import { AuthenticationService, TokenService } from '../rest-service/services';
 
 @Component({
   templateUrl: 'details.component.html',
   moduleId: module.id,
-  providers: [ServerClientService, QuestionService]
+  providers: [QuestionService]
 })
 export class DetailsComponent{
   questions: any[];
-  token: string;
   error: string;
   model: any = {};
-  homeUrl = '/api/userDetails';
+  homeUrl = '/api/users/';
+  private headers:HttpHeaders =  new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  constructor(private http: Http, private client: ServerClientService, private authentication: AuthenticationService, private qs: QuestionService) {
-    this.token = this.authentication.getToken();
+
+  constructor(private http: HttpClient, private tokenService: TokenService, private qs: QuestionService) {
   }
 
   ngOnInit(): void {
-    this.client.getObservable(Method.GET, this.homeUrl).subscribe(
+    this.http.get(this.homeUrl + this.tokenService.getToken().id, {headers:this.headers})
+    .subscribe(
       res => { this.model = res; this.questions = this.qs.getQuestionsDetails(); this.getFormValues(); } ,
-      error => this.error = <any>error);
-    return;
-
+      error => this.error = <any>error
+    );
   }
-
 
   getFormValues(): void {
     let newquestions = [];

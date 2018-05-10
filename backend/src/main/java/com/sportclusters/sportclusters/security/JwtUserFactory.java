@@ -6,9 +6,10 @@ package com.sportclusters.sportclusters.security;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.sportclusters.sportclusters.security.model.Authority;
-import com.sportclusters.sportclusters.security.model.User;
+import com.sportclusters.sportclusters.entity.Authority;
+import com.sportclusters.sportclusters.entity.User;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public final class JwtUserFactory {
                 user.getPassword(),
                 mapToGrantedAuthorities(user.getAuthorities()),
                 user.getEnabled(),
-                user.getLastPasswordResetDate()
+                Date.from(user.getLastPasswordResetDateUTC().toInstant())
         );
     }
 

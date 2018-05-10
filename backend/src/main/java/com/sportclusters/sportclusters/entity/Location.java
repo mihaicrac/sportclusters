@@ -2,7 +2,6 @@ package com.sportclusters.sportclusters.entity;
 
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,13 +13,9 @@ import java.util.*;
 public class Location {
 
     @Id
-//    @Column(name = "ID")
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "location_seq")
-//    @SequenceGenerator(name = "location_seq", sequenceName = "location_seq", allocationSize = 1)
-
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
-    @Column(name = "ID", columnDefinition = "CHAR(32)")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "ID", columnDefinition = "BINARY(16)")
     private UUID id;
 
     @Column(name = "LATITUDE")
@@ -35,7 +30,6 @@ public class Location {
 
     @Column(name = "NAME")
     private String name;
-
 
     @OneToMany(mappedBy = "location")
     protected Set<Event> events = new HashSet<>();

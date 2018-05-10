@@ -1,8 +1,10 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import {HomeComponent} from './home.component';
-import {DetailsComponent} from './details.component';
+import { HomeComponent } from './home.component';
+import { DetailsComponent } from './details.component';
+import { AccountComponent } from '../account-details/account.component';
+import  {CreateEventComponent} from '../create-event/create-event.component';
 
 const homeRoutes: Routes = [
   {
@@ -10,8 +12,8 @@ const homeRoutes: Routes = [
     component: HomeComponent,
     children: [
       {
-        path: 'details',
-        component: DetailsComponent
+        path: 'account-details',
+        component: AccountComponent
       },
        {
         path: 'userList',
@@ -27,7 +29,7 @@ const homeRoutes: Routes = [
       },
       {
         path: 'createEvent',
-        component: DetailsComponent
+        component: CreateEventComponent
       },
     ]
   }
